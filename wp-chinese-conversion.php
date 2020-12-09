@@ -71,7 +71,7 @@ $wpcc_langs = array(
 
 //容错处理.
 if( $wpcc_options != false && is_array($wpcc_options) && is_array($wpcc_options['wpcc_used_langs']) ) {
-	add_action('widgets_init', create_function('', 'return register_widget("Wpcc_Widget");'));
+	add_action('widgets_init', function() { return register_widget("Wpcc_Widget"); });
 	add_filter('query_vars', 'wpcc_insert_query_vars');//修改query_vars钩子,增加一个'variant'公共变量.
 	add_action('init', 'wpcc_init');//插件初始化
 
@@ -79,7 +79,7 @@ if( $wpcc_options != false && is_array($wpcc_options) && is_array($wpcc_options[
 		WP_DEBUG ||
 		( defined('WPCC_DEBUG') && WPCC_DEBUG == true )
 	) {
-		add_action('init', create_function('', 'global $wp_rewrite; $wp_rewrite->flush_rules();'));
+		add_action('init', function() use ($wp_rewrite) { $wp_rewrite->flush_rules(); });
 		add_action('wp_footer', 'wpcc_debug');
 	}
 }
@@ -1013,7 +1013,7 @@ function wpcc_is_robot() {
  */
 function wpcc_apply_filter_search_rule() {
 	add_filter('posts_where', 'wpcc_filter_search_rule', 100);
-	add_filter('posts_distinct', create_function('$s', 'return \'DISTINCT\';'));
+	add_filter('posts_distinct', function($s) { return 'DISTINCT'; });
 }
 
 /**
